@@ -1,5 +1,8 @@
 package net.dontdrinkandroot.metagen;
 
+import net.dontdrinkandroot.metagen.prototype.AttributePrototype;
+import net.dontdrinkandroot.metagen.visitor.AttributePrototypeVisitor;
+
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;

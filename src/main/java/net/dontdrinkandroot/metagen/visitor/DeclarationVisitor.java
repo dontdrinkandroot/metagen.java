@@ -1,4 +1,4 @@
-package net.dontdrinkandroot.metagen;
+package net.dontdrinkandroot.metagen.visitor;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;

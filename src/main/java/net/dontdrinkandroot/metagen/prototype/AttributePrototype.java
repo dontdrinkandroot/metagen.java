@@ -1,11 +1,11 @@
-package net.dontdrinkandroot.metagen;
+package net.dontdrinkandroot.metagen.prototype;
 
 /**
  * @author Philip Washington Sorst <philip@sorst.net>
  */
 public class AttributePrototype
 {
-	enum Type
+	public enum Type
 	{
 		SINGULAR,
 		SET,
@@ -26,16 +26,16 @@ public class AttributePrototype
 
 	public Type getType()
 	{
-		return type;
+		return this.type;
 	}
 
 	public String getDefinition()
 	{
-		return definition;
+		return this.definition;
 	}
 
 	public boolean isSingular()
 	{
-		return type == Type.SINGULAR;
+		return this.type == Type.SINGULAR;
 	}
 }

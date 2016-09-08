@@ -1,4 +1,6 @@
-package net.dontdrinkandroot.metagen;
+package net.dontdrinkandroot.metagen.visitor;
+
+import net.dontdrinkandroot.metagen.prototype.AttributePrototype;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.type.*;

@@ -1,4 +1,4 @@
-package net.dontdrinkandroot.metagen;
+package net.dontdrinkandroot.metagen.visitor;
 
 import javax.lang.model.type.*;
 import javax.lang.model.util.AbstractTypeVisitor8;

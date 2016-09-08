@@ -1,6 +1,7 @@
 package net.dontdrinkandroot.metagen.visitor;
 
 import net.dontdrinkandroot.metagen.prototype.AttributePrototype;
+import net.dontdrinkandroot.metagen.prototype.MapAttributePrototype;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.type.ArrayType;
@@ -34,9 +35,6 @@ public class AttributePrototypeVisitor extends AbstractTypeVisitor<AttributeProt
 	public AttributePrototype visitDeclared(DeclaredType t, ProcessingEnvironment env)
 	{
 		List<? extends TypeMirror> typeArguments = t.getTypeArguments();
-		if (typeArguments.size() == 0) {
-			return new AttributePrototype(AttributePrototype.Type.SINGULAR, t.accept(new DeclarationVisitor(), env));
-		}
 
 		//TODO: Check if this is a plural attribute
 		if (t.toString().startsWith("java.util.List")) {
@@ -45,6 +43,19 @@ public class AttributePrototypeVisitor extends AbstractTypeVisitor<AttributeProt
 
 		if (t.toString().startsWith("java.util.Set")) {
 			return new AttributePrototype(AttributePrototype.Type.SET, t.accept(new DeclarationVisitor(), env));
+		}
+
+		if (t.toString().startsWith("java.util.Collection")) {
+			return new AttributePrototype(AttributePrototype.Type.COLLECTION, t.accept(new DeclarationVisitor(), env));
+		}
+
+		if (t.toString().startsWith("java.util.Map")) {
+
+			String valueDefinition = "?";
+			if (typeArguments.size() == 2) {
+				valueDefinition = typeArguments.get(1).accept(new DeclarationVisitor(), env);
+			}
+			return new MapAttributePrototype(t.accept(new DeclarationVisitor(), env), valueDefinition);
 		}
 
 		return new AttributePrototype(AttributePrototype.Type.SINGULAR, t.accept(new DeclarationVisitor(), env));

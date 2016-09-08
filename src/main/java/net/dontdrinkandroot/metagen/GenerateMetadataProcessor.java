@@ -1,6 +1,7 @@
 package net.dontdrinkandroot.metagen;
 
 import net.dontdrinkandroot.metagen.prototype.AttributePrototype;
+import net.dontdrinkandroot.metagen.prototype.MapAttributePrototype;
 import net.dontdrinkandroot.metagen.visitor.AttributePrototypeVisitor;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -73,13 +74,26 @@ public class GenerateMetadataProcessor extends AbstractProcessor
 					AttributePrototype attributePrototype =
 							typeMirror.accept(new AttributePrototypeVisitor(), this.processingEnv);
 					if (null != attributePrototype)
-						bw.append(String.format(
-								"\tpublic static volatile %s<%s, %s> %s;",
-								attributePrototype.getType().getAttributeClass(),
-								typeElement.getQualifiedName(),
-								attributePrototype.getDefinition(),
-								enclosedElement.getSimpleName()
-						));
+
+						if (attributePrototype instanceof MapAttributePrototype) {
+							MapAttributePrototype mapAttributePrototype = (MapAttributePrototype) attributePrototype;
+							bw.append(String.format(
+									"\tpublic static volatile %s<%s, %s, %s> %s;",
+									attributePrototype.getType().getAttributeClass(),
+									typeElement.getQualifiedName(),
+									attributePrototype.getDefinition(),
+									((MapAttributePrototype) attributePrototype).getValueDefinition(),
+									enclosedElement.getSimpleName()
+							));
+						} else {
+							bw.append(String.format(
+									"\tpublic static volatile %s<%s, %s> %s;",
+									attributePrototype.getType().getAttributeClass(),
+									typeElement.getQualifiedName(),
+									attributePrototype.getDefinition(),
+									enclosedElement.getSimpleName()
+							));
+						}
 				}
 				bw.newLine();
 			}

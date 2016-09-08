@@ -1,0 +1,12 @@
+language: java
+jdk:
+  - oraclejdk8
+cache:
+  directories:
+    - "$HOME/.m2/repository"
+env:
+  global:
+    - NEXUS_USERNAME=travis
+    - secure: E6cbX1f/IS4SIpHwyoN/nwGsc4SHiVQ/AIIZkKxCMY8zxLrqiV2hXtAsCS3X3v8P0Rj8xwC+YOn0xW0Qo8g2lVpOpv95DAYrPeBfjQWPYgRw8YlXf+zp95wlkRjEu0UJPWMuYMIeiDO+vHjc11QmgOikPR+1j4CrrMe28qDsWwzc1JzJ/OP9vXY2MOdfIsNd4CnRXuHQZqfA4hQ/Amly9BPnu7wdIgCmLsHqDDLjjT5v45XoeEEG+EjeC2+n5tWwlkpxjSlDV/hX0BJWQSKeFK/7wRW0efpC4W2ePmCI+kG2rfSHI9lnpBZCyJaLRTYFAlcuewEDxEfcjK3YEPN1N+tpkLeyoyrt3oiRCredxlSCvYZscb7Qdyxua1JiiCePgNkrxxDecvfPwkCBP0JJsFPcxOm34Macs66NhCtKyzb6oJPkC5XYVT0K4lPY0YnYimwSR2Q20Ug7B/WrmjiTTn2UCVsdtk7gl066CeU84ePBloeHJ4j2E8Z+KRDZbsif+8IOK+tcYqRvgZqXTRk9a/K/9/mJq+7KW1EuLIrXdsDKP9TPWk5OwRdxd4y84xFfYWPozqj5GKkObdoESZNoJ9m8mCbOA8ARmXUPqVtTAi08F1Na+dkkYV6jvN1q2jbT1poCzGeRRIXmFuzyyJxsyf/s/PAbwzPyLF9tVxv9WpI=
+script:
+  - mvn clean deploy --settings travis-maven-settings.xml

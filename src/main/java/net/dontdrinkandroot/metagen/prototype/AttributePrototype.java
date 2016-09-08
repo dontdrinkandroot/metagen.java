@@ -7,11 +7,23 @@ public class AttributePrototype
 {
 	public enum Type
 	{
-		SINGULAR,
-		SET,
-		LIST,
-		COLLECTION,
-		MAP;
+		SINGULAR("javax.persistence.metamodel.SingularAttribute"),
+		SET("javax.persistence.metamodel.SetAttribute"),
+		LIST("javax.persistence.metamodel.ListAttribute"),
+		COLLECTION("javax.persistence.metamodel.CollectionAttribute"),
+		MAP("javax.persistence.metamodel.MapAttribute");
+
+		private final String attributeClass;
+
+		private Type(String attributeClass)
+		{
+			this.attributeClass = attributeClass;
+		}
+
+		public String getAttributeClass()
+		{
+			return this.attributeClass;
+		}
 	}
 
 	private Type type;

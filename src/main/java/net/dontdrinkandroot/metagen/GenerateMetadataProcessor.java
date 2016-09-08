@@ -9,6 +9,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.JavaFileObject;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -22,6 +23,14 @@ import java.util.Set;
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class GenerateMetadataProcessor extends AbstractProcessor
 {
+
+	public static final String CLASSSTRING_STATIC_METAMODEL = "javax.persistence.metamodel.StaticMetamodel";
+	public static final String CLASSSTRING_SINGULAR_ATTRIBUTE = "javax.persistence.metamodel.SingularAttribute";
+	public static final String CLASSSTRING_SET_ATTRIBUTE = "javax.persistence.metamodel.SetAttribute";
+	public static final String CLASSSTRING_LIST_ATTRIBUTE = "javax.persistence.metamodel.ListAttribute";
+	public static final String CLASSSTRING_COLLECTION_ATTRIBUTE = "javax.persistence.metamodel.CollectionAttribute";
+	public static final String CLASSSTRING_MAP_ATTRIBUTE = "javax.persistence.metamodel.MapAttribute";
+
 	@Override
 	public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
 	{
@@ -44,18 +53,65 @@ public class GenerateMetadataProcessor extends AbstractProcessor
 			bw.append(packageElement.getQualifiedName());
 			bw.append(";\n");
 			bw.append(String.format(
-					"@javax.persistence.metamodel.StaticMetamodel(%s.class)\n",
+					"@%s(%s.class)\n",
+					CLASSSTRING_STATIC_METAMODEL,
 					typeElement.getQualifiedName()
 			));
 			bw.append(String.format("public abstract class %s {\n", typeElement.getSimpleName() + "_"));
 			for (Element enclosedElement : typeElement.getEnclosedElements()) {
 				if (enclosedElement.getKind() == ElementKind.FIELD) {
-					bw.append(String.format(
-							"\tpublic static volatile javax.persistence.metamodel.SingularAttribute<%s, %s> %s;\n",
-							typeElement.getQualifiedName(),
-							enclosedElement.asType(),
-							enclosedElement.getSimpleName()
-					));
+					TypeMirror typeMirror = enclosedElement.asType();
+					AttributePrototype attributePrototype = typeMirror.accept(new AttributePrototypeVisitor(), null);
+					if (null != attributePrototype)
+						if (attributePrototype.isSingular()) {
+							bw.append(String.format(
+									"\tpublic static volatile %s<%s, %s> %s;\n",
+									CLASSSTRING_SINGULAR_ATTRIBUTE,
+									typeElement.getQualifiedName(),
+									attributePrototype.getDefinition(),
+									enclosedElement.getSimpleName()
+							));
+						} else {
+							switch (attributePrototype.getType()) {
+
+								case SET:
+									bw.append(String.format(
+											"\tpublic static volatile %s<%s, %s> %s;\n",
+											CLASSSTRING_SET_ATTRIBUTE,
+											typeElement.getQualifiedName(),
+											attributePrototype.getDefinition(),
+											enclosedElement.getSimpleName()
+									));
+									break;
+								case LIST:
+									bw.append(String.format(
+											"\tpublic static volatile %s<%s, %s> %s;\n",
+											CLASSSTRING_LIST_ATTRIBUTE,
+											typeElement.getQualifiedName(),
+											attributePrototype.getDefinition(),
+											enclosedElement.getSimpleName()
+									));
+									break;
+								case COLLECTION:
+									bw.append(String.format(
+											"\tpublic static volatile %s<%s, %s> %s;\n",
+											CLASSSTRING_COLLECTION_ATTRIBUTE,
+											typeElement.getQualifiedName(),
+											attributePrototype.getDefinition(),
+											enclosedElement.getSimpleName()
+									));
+									break;
+								case MAP:
+									bw.append(String.format(
+											"\tpublic static volatile %s<%s, %s> %s;\n",
+											CLASSSTRING_MAP_ATTRIBUTE,
+											typeElement.getQualifiedName(),
+											attributePrototype.getDefinition(),
+											enclosedElement.getSimpleName()
+									));
+									break;
+							}
+						}
 				}
 			}
 			bw.append("}");

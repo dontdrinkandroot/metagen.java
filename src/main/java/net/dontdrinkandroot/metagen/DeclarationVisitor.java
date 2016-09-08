@@ -1,14 +1,16 @@
 package net.dontdrinkandroot.metagen;
 
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.*;
 
 /**
  * @author Philip Washington Sorst <philip@sorst.net>
  */
-public class DeclarationVisitor implements TypeVisitor<String, Void>
+public class DeclarationVisitor implements TypeVisitor<String, ProcessingEnvironment>
 {
 	@Override
-	public String visit(TypeMirror t, Void aVoid)
+	public String visit(TypeMirror t, ProcessingEnvironment env)
 	{
 		System.out.println("visit(TypeMirror t, Void aVoid)");
 		return null;
@@ -22,100 +24,83 @@ public class DeclarationVisitor implements TypeVisitor<String, Void>
 	}
 
 	@Override
-	public String visitPrimitive(PrimitiveType t, Void aVoid)
+	public String visitPrimitive(PrimitiveType t, ProcessingEnvironment env)
 	{
-		switch (t.getKind()) {
-			case BYTE:
-				return Byte.class.getCanonicalName();
-			case SHORT:
-				return Short.class.getCanonicalName();
-			case INT:
-				return Integer.class.getCanonicalName();
-			case LONG:
-				return Long.class.getCanonicalName();
-			case FLOAT:
-				return Float.class.getCanonicalName();
-			case DOUBLE:
-				return Double.class.getCanonicalName();
-			case CHAR:
-				return Character.class.getCanonicalName();
-			case BOOLEAN:
-				return Boolean.class.getCanonicalName();
-		}
-		throw new RuntimeException(String.format("Couldn't extract primitive wrapper for %s", t.getKind()));
+		TypeElement boxedElement = env.getTypeUtils().boxedClass(t);
+		return boxedElement.getQualifiedName().toString();
 	}
 
 	@Override
-	public String visitNull(NullType t, Void aVoid)
+	public String visitNull(NullType t, ProcessingEnvironment env)
 	{
 		System.out.println("visitNull(NullType t, Void aVoid)");
 		return null;
 	}
 
 	@Override
-	public String visitArray(ArrayType t, Void aVoid)
+	public String visitArray(ArrayType t, ProcessingEnvironment env)
 	{
 		System.out.println("visitArray(ArrayType t, Void aVoid)");
 		return null;
 	}
 
 	@Override
-	public String visitDeclared(DeclaredType t, Void aVoid)
+	public String visitDeclared(DeclaredType t, ProcessingEnvironment env)
 	{
 		return t.toString();
 	}
 
 	@Override
-	public String visitError(ErrorType t, Void aVoid)
+	public String visitError(ErrorType t, ProcessingEnvironment env)
 	{
 		System.out.println("visitError(ErrorType t, Void aVoid)");
 		return null;
 	}
 
 	@Override
-	public String visitTypeVariable(TypeVariable t, Void aVoid)
+	public String visitTypeVariable(TypeVariable t, ProcessingEnvironment env)
 	{
 		System.out.println("visitTypeVariable(TypeVariable t, Void aVoid)");
 		return null;
 	}
 
 	@Override
-	public String visitWildcard(WildcardType t, Void aVoid)
+	public String visitWildcard(WildcardType t, ProcessingEnvironment env)
 	{
 		System.out.println("visitWildcard(WildcardType t, Void aVoid)");
 		return null;
 	}
 
 	@Override
-	public String visitExecutable(ExecutableType t, Void aVoid)
+	public String visitExecutable(ExecutableType t, ProcessingEnvironment env)
 	{
 		System.out.println("visitExecutable(ExecutableType t, Void aVoid)");
 		return null;
 	}
 
 	@Override
-	public String visitNoType(NoType t, Void aVoid)
+	public String visitNoType(NoType t, ProcessingEnvironment env)
 	{
 		System.out.println("visitNoType(NoType t, Void aVoid)");
 		return null;
 	}
 
 	@Override
-	public String visitUnknown(TypeMirror t, Void aVoid)
+	public String visitUnknown(TypeMirror t, ProcessingEnvironment env)
 	{
 		System.out.println("visitUnknown(TypeMirror t, Void aVoid)");
 		return null;
 	}
 
 	@Override
-	public String visitUnion(UnionType t, Void aVoid)
+	public String visitUnion(UnionType t, ProcessingEnvironment env)
 	{
 		System.out.println("visitUnion(UnionType t, Void aVoid)");
 		return null;
 	}
 
 	@Override
-	public String visitIntersection(IntersectionType t, Void aVoid)
+	public String visitIntersection(IntersectionType t, ProcessingEnvironment env)
 	{
 		System.out.println("visitIntersection(IntersectionType t, Void aVoid)");
 		return null;

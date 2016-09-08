@@ -61,7 +61,8 @@ public class GenerateMetadataProcessor extends AbstractProcessor
 			for (Element enclosedElement : typeElement.getEnclosedElements()) {
 				if (enclosedElement.getKind() == ElementKind.FIELD) {
 					TypeMirror typeMirror = enclosedElement.asType();
-					AttributePrototype attributePrototype = typeMirror.accept(new AttributePrototypeVisitor(), null);
+					AttributePrototype attributePrototype =
+							typeMirror.accept(new AttributePrototypeVisitor(), this.processingEnv);
 					if (null != attributePrototype)
 						if (attributePrototype.isSingular()) {
 							bw.append(String.format(

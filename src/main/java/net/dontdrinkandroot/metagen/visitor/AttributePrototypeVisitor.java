@@ -21,7 +21,6 @@ public class AttributePrototypeVisitor extends AbstractTypeVisitor<AttributeProt
 		return new AttributePrototype(AttributePrototype.Type.SINGULAR, t.accept(new DeclarationVisitor(), env));
 	}
 
-
 	@Override
 	public AttributePrototype visitArray(ArrayType t, ProcessingEnvironment env)
 	{

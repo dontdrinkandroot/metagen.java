@@ -30,6 +30,8 @@ public class GenerateMetadataProcessor extends AbstractProcessor
 {
     public static final String CLASSSTRING_STATIC_METAMODEL = "javax.persistence.metamodel.StaticMetamodel";
 
+    public static final String CLASSSTRING_GENERATED = "javax.annotation.Generated";
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
     {
@@ -48,9 +50,10 @@ public class GenerateMetadataProcessor extends AbstractProcessor
             JavaFileObject fileObject =
                     this.processingEnv.getFiler().createSourceFile(typeElement.getQualifiedName() + "_");
             BufferedWriter bw = new BufferedWriter(fileObject.openWriter());
-            bw.append("package ");
-            bw.append(this.getPackageName(typeElement));
-            bw.append(";\n");
+            bw.append(String.format("package %s;", this.getPackageName(typeElement)));
+            bw.newLine();
+            bw.append(String.format("@%s(value = \"%s\")", CLASSSTRING_GENERATED, this.getClass().getCanonicalName()));
+            bw.newLine();
             bw.append(String.format(
                     "@%s(%s.class)",
                     CLASSSTRING_STATIC_METAMODEL,
@@ -75,14 +78,14 @@ public class GenerateMetadataProcessor extends AbstractProcessor
                             typeMirror.accept(new AttributePrototypeVisitor(), this.processingEnv);
                     if (null != attributePrototype)
 
-                        if (attributePrototype instanceof MapAttributePrototype) {
+                        if (AttributePrototype.Type.MAP == attributePrototype.getType()) {
                             MapAttributePrototype mapAttributePrototype = (MapAttributePrototype) attributePrototype;
                             bw.append(String.format(
                                     "\tpublic static volatile %s<%s, %s, %s> %s;",
-                                    attributePrototype.getType().getAttributeClass(),
+                                    mapAttributePrototype.getType().getAttributeClass(),
                                     typeElement.getQualifiedName(),
-                                    attributePrototype.getDefinition(),
-                                    ((MapAttributePrototype) attributePrototype).getValueDefinition(),
+                                    mapAttributePrototype.getDefinition(),
+                                    mapAttributePrototype.getValueDefinition(),
                                     enclosedElement.getSimpleName()
                             ));
                         } else {

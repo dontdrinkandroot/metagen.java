@@ -99,6 +99,9 @@
                 <configuration>
                     <header>LICENSE</header>
                     <strictCheck>true</strictCheck>
+                    <mapping>
+                        <java>SLASHSTAR_STYLE</java>
+                    </mapping>
                     <excludes>
                         <exclude>**/README</exclude>
                         <exclude>**/README.md</exclude>

@@ -29,9 +29,9 @@ Generated file:
 ```java
 package net.dontdrinkandroot.metagen.test;
 @javax.annotation.Generated(value = "net.dontdrinkandroot.metagen.GenerateMetadataProcessor")
-@javax.persistence.metamodel.StaticMetamodel(net.sorst.internal.model.test.PropertyTestClass.class)
+@javax.persistence.metamodel.StaticMetamodel(net.dontdrinkandroot.metagen.test.PropertyTestClass.class)
 public abstract class PropertyTestClass_ {
-	public static volatile javax.persistence.metamodel.SingularAttribute<net.sorst.internal.model.test.PropertyTestClass, java.lang.Byte> primitiveByteField;
+	public static volatile javax.persistence.metamodel.SingularAttribute<net.dontdrinkandroot.metagen.test.PropertyTestClass, java.lang.Byte> primitiveByteField;
 }
 ```
 

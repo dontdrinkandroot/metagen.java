@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.dontdrinkandroot.metagen.visitor;
+package net.dontdrinkandroot.metagen.processor.visitor;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.type.*;

@@ -15,16 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.dontdrinkandroot.metagen;
-
-import java.lang.annotation.*;
+package net.dontdrinkandroot.metagen.processor.prototype;
 
 /**
  * @author Philip Washington Sorst <philip@sorst.net>
  */
-@Inherited
-@Retention(RetentionPolicy.SOURCE)
-@Target(ElementType.TYPE)
-public @interface GenerateMetadata
+public class AttributePrototype
 {
+
+    private String definition;
+
+    private String classString;
+
+    public AttributePrototype(String definition, String classString)
+    {
+        this.definition = definition;
+        this.classString = classString;
+    }
+
+    public String getDefinition()
+    {
+        return this.definition;
+    }
+
+    public String getClassString()
+    {
+        return this.classString;
+    }
 }

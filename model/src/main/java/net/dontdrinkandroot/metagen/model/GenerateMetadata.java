@@ -15,28 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.dontdrinkandroot.metagen.visitor;
+package net.dontdrinkandroot.metagen.model;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.PrimitiveType;
+import java.lang.annotation.*;
 
 /**
  * @author Philip Washington Sorst <philip@sorst.net>
  */
-public class DeclarationVisitor extends AbstractTypeVisitor<String>
+@Inherited
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.TYPE)
+public @interface GenerateMetadata
 {
-	@Override
-	public String visitPrimitive(PrimitiveType t, ProcessingEnvironment env)
-	{
-		TypeElement boxedElement = env.getTypeUtils().boxedClass(t);
-		return boxedElement.getQualifiedName().toString();
-	}
-
-	@Override
-	public String visitDeclared(DeclaredType t, ProcessingEnvironment env)
-	{
-		return t.toString();
-	}
 }

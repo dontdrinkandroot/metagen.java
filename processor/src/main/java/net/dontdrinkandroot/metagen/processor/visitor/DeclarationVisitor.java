@@ -15,23 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.dontdrinkandroot.metagen.prototype;
+package net.dontdrinkandroot.metagen.processor.visitor;
+
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.PrimitiveType;
 
 /**
  * @author Philip Washington Sorst <philip@sorst.net>
  */
-public class MapAttributePrototype extends AttributePrototype
+public class DeclarationVisitor extends AbstractTypeVisitor<String>
 {
-	private String valueDefinition;
-
-	public MapAttributePrototype(String definition, String valueDefinition)
+	@Override
+	public String visitPrimitive(PrimitiveType t, ProcessingEnvironment env)
 	{
-		super(Type.MAP, definition);
-		this.valueDefinition = valueDefinition;
+		TypeElement boxedElement = env.getTypeUtils().boxedClass(t);
+		return boxedElement.getQualifiedName().toString();
 	}
 
-	public String getValueDefinition()
+	@Override
+	public String visitDeclared(DeclaredType t, ProcessingEnvironment env)
 	{
-		return this.valueDefinition;
+		return t.toString();
 	}
 }

@@ -1,14 +1,14 @@
 metagen.java
 ============
 
-Generate javax.persistence.metamodel classes for arbitrary classes
+Simple metadata generator.
 
 [![Build Status](https://travis-ci.org/dontdrinkandroot/metagen.java.svg?branch=master)](https://travis-ci.org/dontdrinkandroot/metagen.java)
 
 Usage
 -----
 
-Simply add the `@net.dontdrinkandroot.metagen.GenerateMetadata` annotation to the classes for which you want metadata to be generated.
+Simply add the `@net.dontdrinkandroot.metagen.model.GenerateMetadata` annotation to the classes for which you want metadata to be generated.
 
 ### Example
 
@@ -16,7 +16,7 @@ Input file:
 
 ```java
 package net.sorst.metagen.test;
-import net.dontdrinkandroot.metagen.GenerateMetadata;
+import net.dontdrinkandroot.metagen.model.GenerateMetadata;
 @GenerateMetadata
 public class PropertyTestClass
 {
@@ -28,10 +28,10 @@ Generated file:
 
 ```java
 package net.dontdrinkandroot.metagen.test;
-@javax.annotation.Generated(value = "net.dontdrinkandroot.metagen.GenerateMetadataProcessor")
-@javax.persistence.metamodel.StaticMetamodel(net.dontdrinkandroot.metagen.test.PropertyTestClass.class)
+@javax.annotation.Generated(value = "net.dontdrinkandroot.metagen.processor.GenerateMetadataProcessor")
 public abstract class PropertyTestClass_ {
-	public static volatile javax.persistence.metamodel.SingularAttribute<net.dontdrinkandroot.metagen.test.PropertyTestClass, java.lang.Byte> primitiveByteField;
+	public static net.dontdrinkandroot.metagen.model.Attribute<net.dontdrinkandroot.metagen.test.PropertyTestClass, java.lang.Byte> primitiveByteField =
+    		new net.dontdrinkandroot.metagen.model.Attribute("primitiveByteField", net.dontdrinkandroot.metagen.test.PropertyTestClass.class, java.lang.Byte.class);
 }
 ```
 

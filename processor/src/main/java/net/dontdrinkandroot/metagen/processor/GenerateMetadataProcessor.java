@@ -15,12 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.dontdrinkandroot.metagen;
+package net.dontdrinkandroot.metagen.processor;
 
-import net.dontdrinkandroot.metagen.prototype.AttributePrototype;
-import net.dontdrinkandroot.metagen.prototype.MapAttributePrototype;
-import net.dontdrinkandroot.metagen.visitor.AttributePrototypeVisitor;
+import net.dontdrinkandroot.metagen.model.Attribute;
+import net.dontdrinkandroot.metagen.model.GenerateMetadata;
+import net.dontdrinkandroot.metagen.processor.prototype.AttributePrototype;
+import net.dontdrinkandroot.metagen.processor.visitor.AttributePrototypeVisitor;
 
+import javax.annotation.Generated;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -41,18 +43,15 @@ import java.util.Set;
 /**
  * @author Philip Washington Sorst <philip@sorst.net>
  */
-@SupportedAnnotationTypes("net.dontdrinkandroot.metagen.GenerateMetadata")
+@SupportedAnnotationTypes("net.dontdrinkandroot.metagen.model.GenerateMetadata")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class GenerateMetadataProcessor extends AbstractProcessor
 {
-    public static final String CLASSSTRING_STATIC_METAMODEL = "javax.persistence.metamodel.StaticMetamodel";
-
-    public static final String CLASSSTRING_GENERATED = "javax.annotation.Generated";
-
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
     {
         Field field;
+        @SuppressWarnings("unchecked")
         Set<TypeElement> elements = (Set<TypeElement>) roundEnv.getElementsAnnotatedWith(GenerateMetadata.class);
         for (TypeElement element : elements) {
             this.processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Processing", element);
@@ -69,12 +68,10 @@ public class GenerateMetadataProcessor extends AbstractProcessor
             BufferedWriter bw = new BufferedWriter(fileObject.openWriter());
             bw.append(String.format("package %s;", this.getPackageName(typeElement)));
             bw.newLine();
-            bw.append(String.format("@%s(value = \"%s\")", CLASSSTRING_GENERATED, this.getClass().getCanonicalName()));
-            bw.newLine();
             bw.append(String.format(
-                    "@%s(%s.class)",
-                    CLASSSTRING_STATIC_METAMODEL,
-                    typeElement.getQualifiedName()
+                    "@%s(value = \"%s\")",
+                    Generated.class.getCanonicalName(),
+                    this.getClass().getCanonicalName()
             ));
             bw.newLine();
             String parentClassName = this.getQualifiedAnnotatedParentClassMetaName(typeElement);
@@ -93,29 +90,25 @@ public class GenerateMetadataProcessor extends AbstractProcessor
                     TypeMirror typeMirror = enclosedElement.asType();
                     AttributePrototype attributePrototype =
                             typeMirror.accept(new AttributePrototypeVisitor(), this.processingEnv);
-                    if (null != attributePrototype)
-
-                        if (AttributePrototype.Type.MAP == attributePrototype.getType()) {
-                            MapAttributePrototype mapAttributePrototype = (MapAttributePrototype) attributePrototype;
-                            bw.append(String.format(
-                                    "\tpublic static volatile %s<%s, %s, %s> %s;",
-                                    mapAttributePrototype.getType().getAttributeClass(),
-                                    typeElement.getQualifiedName(),
-                                    mapAttributePrototype.getDefinition(),
-                                    mapAttributePrototype.getValueDefinition(),
-                                    enclosedElement.getSimpleName()
-                            ));
-                        } else {
-                            bw.append(String.format(
-                                    "\tpublic static volatile %s<%s, %s> %s;",
-                                    attributePrototype.getType().getAttributeClass(),
-                                    typeElement.getQualifiedName(),
-                                    attributePrototype.getDefinition(),
-                                    enclosedElement.getSimpleName()
-                            ));
-                        }
+                    if (null != attributePrototype) {
+                        bw.append(String.format(
+                                "\tpublic static %s<%s, %s> %s =",
+                                Attribute.class.getCanonicalName(),
+                                typeElement.getQualifiedName(),
+                                attributePrototype.getDefinition(),
+                                enclosedElement.getSimpleName()
+                        ));
+                        bw.newLine();
+                        bw.append(String.format(
+                                "\t\tnew %s(\"%s\", %s.class, %s.class);",
+                                Attribute.class.getCanonicalName(),
+                                enclosedElement.getSimpleName(),
+                                typeElement.getQualifiedName(),
+                                attributePrototype.getClassString()
+                        ));
+                        bw.newLine();
+                    }
                 }
-                bw.newLine();
             }
             bw.append("}");
             bw.newLine();

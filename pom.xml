@@ -5,6 +5,8 @@
     <artifactId>metagen.parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <inceptionYear>2016</inceptionYear>
+    <description>Simple metadata generator</description>
 
     <modules>
         <module>model</module>
@@ -35,8 +37,36 @@
         <maven>3.0</maven>
     </prerequisites>
 
+    <scm>
+        <url>git@github.com:dontdrinkandroot/metagen.java.git</url>
+        <connection>scm:git:git@github.com/dontdrinkandroot/metagen.java.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/dontdrinkandroot/metagen.java.git
+        </developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/dontdrinkandroot/metagen.java/issues</url>
+    </issueManagement>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
+        <version.maven-source-plugin>3.0.1</version.maven-source-plugin>
+        <version.maven-javadoc-plugin>2.10.4</version.maven-javadoc-plugin>
+        <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
         <version.versions-maven-plugin>2.2</version.versions-maven-plugin>
         <version.license-maven-plugin>3.0</version.license-maven-plugin>
         <version.maven-compiler-plugin>3.5.1</version.maven-compiler-plugin>
@@ -47,37 +77,57 @@
         <version.org.slf4j>1.7.21</version.org.slf4j>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>public</id>
-            <url>https://maven.dontdrinkandroot.net/content/groups/public</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>public</id>
-            <url>https://maven.dontdrinkandroot.net/content/groups/public</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <url>https://maven.dontdrinkandroot.net/content/repositories/releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>https://maven.dontdrinkandroot.net/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <scm>
-        <developerConnection>scm:git:https://github.com/dontdrinkandroot/metagen.java.git</developerConnection>
-    </scm>
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${version.maven-source-plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${version.maven-javadoc-plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${version.maven-gpg-plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <build>
-
         <plugins>
 
             <plugin>
